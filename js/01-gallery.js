@@ -16,22 +16,32 @@ const markupFromArr = galleryItems.map((elem) => {
   </div>`
 })
 const markupFromArrString = markupFromArr.join("")
+let modalLightbox = {};
 galleryRef.insertAdjacentHTML("afterbegin", markupFromArrString);
-
 galleryRef.addEventListener('click', onGalleyClick)
 
 function onGalleyClick (event) {
     event.preventDefault();
+    
     const {target} = event;
     if (target.nodeName !== 'IMG') {
         return
     }
     const urlOriginalImg = target.parentNode.href
     const altOriginalImg = target.alt
-    const modal = basicLightbox.create(`
+    modalLightbox = basicLightbox.create(`
     <img src="${urlOriginalImg}" width="800" height="600" alt="${altOriginalImg}">
 `)
-modal.show()
-console.log(altOriginalImg);
+modalLightbox.show()
+window.addEventListener('keydown', onPressEsc)
+}
+function onPressEsc (event) {
+  if(event.code !== 'Escape') {
+    return
+  }
+  if(!modalLightbox.visible()) {
+    return
+  }
+  modalLightbox.close()
 }
 
